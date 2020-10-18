@@ -1,11 +1,14 @@
 use std::path::{PathBuf, Path};
 use std::fs;
 use std::io;
-use std::process::Command;
-use std::time::SystemTime;
-use chrono::{Local, DateTime};
 
-mod config;
+pub fn next_major_card(folder: &PathBuf) -> PathBuf {
+    let all_cards = list_files(&folder);
+    let major_cards = major_cards(&all_cards);
+    let next_card = get_next_major_card(&major_cards, &folder);
+
+    return next_card;
+}
 
 fn list_files_failing(path: &Path) -> io::Result<Vec<PathBuf>> {
     let mut files = Vec::new();
@@ -56,7 +59,7 @@ fn major_cards(files: &Vec<PathBuf>) -> Vec<u64> {
     return major_cards;
 }
 
-fn next_major_card(major_cards: &Vec<u64>, path: &PathBuf) -> PathBuf {
+fn get_next_major_card(major_cards: &Vec<u64>, path: &PathBuf) -> PathBuf {
     let mut latest_major_card: u64 = 0;
     for card in major_cards {
         if *card > latest_major_card {
@@ -71,44 +74,3 @@ fn next_major_card(major_cards: &Vec<u64>, path: &PathBuf) -> PathBuf {
     return path;
 }
 
-fn make_template(path: &Path) {
-    let now = SystemTime::now();
-    let date: DateTime<Local> = DateTime::from(now);
-    let date_template = format!("{}\n\n\n", date.format("%Y-%m-%d"));
-    fs::write(&path, date_template);
-}
-
-fn edit(file: &PathBuf) {
-    let child = Command::new("/usr/bin/vim")
-        .arg(file)
-        .arg("-c")
-        .arg("$")
-        .spawn();
-
-    if let Ok(mut child) = child {
-        if let Ok(_exit) = child.wait() {
-            println!("Note saved");
-        } else {
-            eprintln!("Fail to wait for vim");
-        }
-    } else {
-        eprintln!("Fail to spawn vim");
-    }
-}
-
-fn main() {
-    let zk_folder = PathBuf::from("/tmp/tx/zk");
-    // let zk_folder = PathBuf::from("/tmp/tx");
-    println!("Open a note in {:?}", zk_folder);
-    let all_cards = list_files(&zk_folder);
-    let major_cards = major_cards(&all_cards);
-    let config = config::arguments();
-
-    if config.card {
-        let next = next_major_card(&major_cards, &zk_folder);
-        make_template(&next);
-        edit(&next);
-    } else {
-        println!("No sub-command given");
-    }
-}

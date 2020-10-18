@@ -8,6 +8,18 @@ edition = "2018"
 name = "zk"
 path = "src/zk.rs"
 
+[[bin]]
+name = "zk-card"
+path = "src/zkcard.rs"
+
+[[bin]]
+name = "zk-init"
+path = "src/zkinit.rs"
+
+[[bin]]
+name = "zk-set"
+path = "src/zkset.rs"
+
 [dependencies]
 chrono = "0.4.18"
 rusqlite = "0.24.1"
