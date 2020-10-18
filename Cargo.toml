@@ -1,0 +1,14 @@
+[package]
+name = "rust-zk"
+version = "0.1.0"
+authors = ["Jasse Wistrand <jasse.wistrand@iki.fi>"]
+edition = "2018"
+
+[[bin]]
+name = "zk"
+path = "src/zk.rs"
+
+[dependencies]
+chrono = "0.4.18"
+rusqlite = "0.24.1"
+
