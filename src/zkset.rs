@@ -40,10 +40,15 @@ fn main() {
         }
 
         let timeline = config::open_timeline(&location).unwrap();
-        timeline.execute("
+        let success = timeline.execute("
             update configuration set default_location = ?1;
         ", params![default_location.to_str().unwrap()]);
-        eprintln!("OK, set to {:?}", default_location.to_str());
+
+        if let Ok(_) = success {
+            eprintln!("OK");
+        } else {
+            eprintln!("Failed to set default location to {}", default_location.to_str().unwrap());
+        }
 
         let mut stmt = timeline.prepare("select version, default_location from configuration;").unwrap();
         let row = stmt.query_row(params![], |row| {

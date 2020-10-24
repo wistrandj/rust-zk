@@ -9,7 +9,11 @@ pub fn make_template(path: &Path) {
     let now = SystemTime::now();
     let date: DateTime<Local> = DateTime::from(now);
     let date_template = format!("{}\n\n\n", date.format("%Y-%m-%d"));
-    fs::write(&path, date_template);
+    let success = fs::write(&path, date_template);
+
+    if let Err(_) = success {
+        eprintln!("Failed to write template {}", path.to_str().unwrap());
+    }
 }
 
 pub fn edit(file: &PathBuf) {

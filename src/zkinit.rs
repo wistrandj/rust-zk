@@ -32,9 +32,14 @@ fn main() {
     let timeline = config::open_timeline(&location);
     if let Some(mut timeline) = timeline {
         config::setup1(&mut timeline);
-        timeline.execute("
+        let success = timeline.execute("
             insert into configuration(version, default_location) values (?1, ?2);
         ", params![1, "/tmp"]);
+
+        if let Err(_) = success {
+            eprintln!("Failed to set default location to the initial value (/tmp)", );
+            return;
+        }
     }
 }
 

@@ -1,5 +1,5 @@
 use std::path::PathBuf;
-use rusqlite::{Connection, params};
+use rusqlite::params;
 use std::env;
 
 mod file;

@@ -5,10 +5,6 @@ authors = ["Jasse Wistrand <jasse.wistrand@iki.fi>"]
 edition = "2018"
 
 [[bin]]
-name = "zk"
-path = "src/zk.rs"
-
-[[bin]]
 name = "zk-card"
 path = "src/zkcard.rs"
 
