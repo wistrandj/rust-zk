@@ -16,6 +16,10 @@ path = "src/zkinit.rs"
 name = "zk-set"
 path = "src/zkset.rs"
 
+[[bin]]
+name = "zk-add"
+path = "src/zkadd.rs"
+
 [dependencies]
 chrono = "0.4.18"
 rusqlite = "0.24.1"

@@ -25,11 +25,12 @@ fn main() {
 
     let location = PathBuf::from(location_argument);
 
-    if location.is_file() || location.is_dir() {
-        panic!("The timeline {} exists", location_argument);
-    }
+    // if location.is_file() || location.is_dir() {
+    //     eprintln!("The timeline {} exists", location_argument);
+    //     return;
+    // }
 
-    let timeline = config::open_timeline(&location);
+    let timeline = config::open_new_timeline(&location);
     if let Some(mut timeline) = timeline {
         config::setup1(&mut timeline);
         let success = timeline.execute("
@@ -40,6 +41,11 @@ fn main() {
             eprintln!("Failed to set default location to the initial value (/tmp)", );
             return;
         }
+
+        // Make sure that features are updated too
+        config::setup2(&mut timeline);
     }
+
 }
+
 
