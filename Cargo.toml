@@ -5,20 +5,12 @@ authors = ["Jasse Wistrand <jasse.wistrand@iki.fi>"]
 edition = "2018"
 
 [[bin]]
-name = "zk-card"
-path = "src/zkcard.rs"
+name = "zk"
+path = "src/main.rs"
 
-[[bin]]
-name = "zk-init"
-path = "src/zkinit.rs"
-
-[[bin]]
-name = "zk-set"
-path = "src/zkset.rs"
-
-[[bin]]
-name = "zk-add"
-path = "src/zkadd.rs"
+# [[bin]]
+# name = "zk-add"
+# path = "src/zkadd.rs"
 
 [dependencies]
 chrono = "0.4.18"

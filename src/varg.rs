@@ -1,7 +1,52 @@
-use std::env;
 use std::path::PathBuf;
 
+#[derive(Debug)]
+pub struct Args {
+    pub subcommand: Option<String>,
+    pub timeline_file: Option<PathBuf>,
+    pub args: Vec<String>
+}
+
+impl Args {
+    pub fn from_user_args() -> Args {
+        let mut args = std::env::args().collect::<Vec<String>>();
+        let _executable = args.remove(0);
+        return Args::from_vec(args);
+    }
+
+    fn from_vec(mut args: Vec<String>) -> Args {
+        let timeline_file = get_timeline(&mut args);
+        let subcommand = Args::subcommand(&mut args);
+
+        Args {
+            subcommand,
+            timeline_file,
+            args,
+        }
+    }
+
+    fn subcommand(args: &mut Vec<String>) -> Option<String> {
+        // Assume that the --timeline switch and it's parameter are removed.
+        if args.len() == 0 {
+            return None;
+        }
+
+        let all_commands = [
+            "init", "card", "add", "set"
+        ];
+
+        let subcommand = args.get(0).unwrap();
+        if all_commands.contains(&subcommand.as_str()) {
+            let subcommand = args.remove(0);
+            return Some(String::from(subcommand));
+        } else {
+            return None;
+        }
+    }
+}
+
 pub fn get_timeline(args: &mut Vec<String>) -> Option<PathBuf> {
+    // Todo(wistrandj): Move this function under impl Args.
     let mut timeline_switch: Option<usize> = None;
     let mut path_index: Option<usize> = None;
 
@@ -93,5 +138,36 @@ mod test {
         assert_eq!(path, None);
         assert_eq!(alist.len(), len);
 
+    }
+}
+
+
+#[cfg(test)]
+mod test1 {
+    use super::*;
+    #[test]
+    fn test_argument_read() {
+        let args = vec!["-t", "./timeline.db", "init"].iter().map(|s| s.to_string()).collect();
+        let args = Args::from_vec(args);
+        assert_eq!(args.subcommand, Some("init".to_string()));
+        assert_eq!(args.timeline_file, Some(PathBuf::from("./timeline.db")));
+
+        let args = vec!["init", "-t", "./timeline.db"].iter().map(|s| s.to_string()).collect();
+        let args = Args::from_vec(args);
+        assert_eq!(args.subcommand, Some("init".to_string()));
+        assert_eq!(args.timeline_file, Some(PathBuf::from("./timeline.db")));
+
+        let args = vec!["-t", "./timeline.db"].iter().map(|s| s.to_string()).collect();
+        let args = Args::from_vec(args);
+        assert_eq!(args.subcommand, None);
+        assert_eq!(args.timeline_file, Some(PathBuf::from("./timeline.db")));
+    }
+
+    #[test]
+    fn test_no_timeline() {
+        let args = vec!["init"].iter().map(|s| s.to_string()).collect();
+        let args = Args::from_vec(args);
+        assert_eq!(args.subcommand, Some("init".to_string()));
+        assert_eq!(args.timeline_file, None);
     }
 }
