@@ -4,6 +4,7 @@ use std::env;
 use std::fs;
 use std::ffi::OsStr;
 
+mod varg;
 mod config;
 
 #[derive(Debug)]
