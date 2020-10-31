@@ -6,7 +6,7 @@ use super::config;
 // Command line tool to create a new timeline database. Usage:
 //   $ zk-init --timeline ./path/timeline.zk
 
-pub fn zkinit(timeline_file: PathBuf, _args: &Vec<String>) {
+pub fn zkinit(timeline_file: PathBuf) {
     let timeline = config::open_new_timeline(&timeline_file);
     if let Some(mut timeline) = timeline {
         config::setup1(&mut timeline);

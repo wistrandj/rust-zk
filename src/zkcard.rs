@@ -14,7 +14,7 @@ struct A {
     default_location: String
 }
 
-pub fn zkcard(timeline_file: PathBuf, args: &Vec<String>) {
+pub fn zkcard(timeline_file: PathBuf) {
     let timeline = config::open_timeline(&timeline_file).unwrap();
     let mut query_location = timeline.prepare("select default_location from configuration;").unwrap();
     let location = query_location.query_row(params![], |row| {
