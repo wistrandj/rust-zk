@@ -6,7 +6,7 @@ use rusqlite::params;
 
 use super::file;
 use super::config;
-use super::folder;
+use super::model::opencard;
 
 
 #[derive(Debug)]
@@ -28,7 +28,7 @@ pub fn zkcard(timeline_file: PathBuf) {
         return;
     }
 
-    let next_card = folder::next_major_card(&location);
+    let next_card = opencard::next_major_card(&location);
     println!("Open a new card in {}", next_card.to_str().unwrap());
 
     file::make_template(&next_card);

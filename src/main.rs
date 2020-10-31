@@ -1,5 +1,4 @@
 mod file;
-mod folder;
 mod varg;
 mod config;
 use varg::Args;
