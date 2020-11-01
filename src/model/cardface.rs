@@ -12,8 +12,6 @@ pub struct CardFace {
 
 
 fn name_components(name: &str) -> Option<Vec<Component>> {
-    let mut comps: Vec<Component> = Vec::new();
-
     if name.len() == 0 {
         return None;
     }
@@ -69,7 +67,6 @@ fn name_components(name: &str) -> Option<Vec<Component>> {
     let mut result: Vec<Component> = Vec::new();
     for range in ranges {
         let first_char = range.chars().next().unwrap();
-        let component: Component;
         if first_char.is_ascii_digit() {
             let number: usize = range.parse().unwrap();
             result.push(Component::Number(number));
@@ -161,7 +158,7 @@ impl PartialOrd for Component {
 
 impl PartialEq for CardFace {
     fn eq(&self, that: &CardFace) -> bool {
-        return false;
+        self.cmp(that) == Ordering::Equal
     }
 }
 
