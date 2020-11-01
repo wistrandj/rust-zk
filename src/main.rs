@@ -7,6 +7,7 @@ mod zkinit;
 mod zkset;
 mod zkcard;
 mod model;
+mod schema;
 
 fn main() {
     let args = Args::from_user_args();
