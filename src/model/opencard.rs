@@ -3,12 +3,11 @@ use std::fs;
 use std::io;
 use super::cardface::CardFace;
 
-pub fn next_major_card(folder: &PathBuf) -> PathBuf {
+pub fn next_major_card(folder: &PathBuf) -> CardFace {
     let cards = list_cards(folder);
     let latest_card = cards.iter().max();
     let latest_number: usize = if let Some(card) = latest_card { card.major_number() } else { 0 };
-    let card = CardFace::from_number(latest_number + 1);
-    return card.location_in(folder);
+    return CardFace::from_number(latest_number + 1);
 }
 
 fn list_file_names(path: &Path) -> io::Result<Vec<String>> {

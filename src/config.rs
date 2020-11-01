@@ -68,8 +68,8 @@ pub fn setup2(conn: &mut Connection) {
             blob blob
         );
         create table card(
-            card_name text not null, -- e.g. '123', '123a5'
-            content_sha256 text not null
+            card_name text primary key, -- '123', '123a1'
+            content_sha256 text
         );
         commit;
         "
