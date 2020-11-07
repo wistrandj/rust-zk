@@ -5,12 +5,12 @@ use std::path;
 use std::fs;
 use std::io;
 
-struct Hash {
+pub struct Hash {
     bytes: [u8; 32]
 }
 
 impl Hash {
-    fn from_sha2_hasher(hasher: sha2::Sha256) -> Hash {
+    pub fn from_sha2_hasher(hasher: sha2::Sha256) -> Hash {
         let digest = hasher.finalize();
         return Self::from_slice(&digest.as_slice());
     }
@@ -19,7 +19,7 @@ impl Hash {
     //     panic!("Not implemented");
     // }
 
-    fn from_slice(slice: &[u8]) -> Hash {
+    pub fn from_slice(slice: &[u8]) -> Hash {
         let mut hash: [u8; 32] = [0; 32];
 
         let mut i = 0;
@@ -41,11 +41,11 @@ impl Hash {
         }
     }
 
-    fn to_string(&self) -> String {
+    pub fn to_string(&self) -> String {
         return hexstring(&self.bytes);
     }
 
-    fn file(file: &path::Path) -> Result<Hash, io::Error> {
+    pub fn file(file: &path::Path) -> Result<Hash, io::Error> {
         let mut hasher = sha2::Sha256::new();
         let content = fs::read(file)?;
         hasher.update(content);

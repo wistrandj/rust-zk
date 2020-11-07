@@ -9,7 +9,7 @@ use super::config;
 use super::model::opencard;
 use super::model::dbcard;
 
-pub fn zkcard(timeline_file: PathBuf) {
+pub fn zkcard(timeline_file: &PathBuf) {
     let mut timeline: Connection = config::open_timeline(&timeline_file).unwrap();
     let opencards = opencard::CardFolder::from_timeline(&timeline);
     let cards = opencards.cards();

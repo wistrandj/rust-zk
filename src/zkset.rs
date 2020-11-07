@@ -9,7 +9,7 @@ struct A {
     default_location: String
 }
 
-pub fn zkset(timeline_file: PathBuf, args: &Vec<String>) {
+pub fn zkset(timeline_file: &PathBuf, args: &Vec<String>) {
     if args.len() < 2 {
         eprintln!("No setting or value given");
     }

@@ -32,7 +32,7 @@ impl Args {
         }
 
         let all_commands = [
-            "init", "card", "add", "set"
+            "init", "card", "add", "set", "blob"
         ];
 
         let subcommand = args.get(0).unwrap();
