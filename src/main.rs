@@ -8,6 +8,7 @@ mod zkset;
 mod zkcard;
 mod model;
 mod schema;
+mod hash;
 
 fn main() {
     let args = Args::from_user_args();
