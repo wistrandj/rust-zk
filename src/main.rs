@@ -3,6 +3,7 @@ mod varg;
 mod config;
 use varg::Args;
 
+mod db;
 mod zkinit;
 mod zkset;
 mod zkcard;

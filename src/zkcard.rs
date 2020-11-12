@@ -7,7 +7,7 @@ use rusqlite::Connection;
 use super::file;
 use super::config;
 use super::model::opencard;
-use super::model::dbcard;
+use super::db::dbcard;
 
 pub fn zkcard(timeline_file: &PathBuf) {
     let mut timeline: Connection = config::open_timeline(&timeline_file).unwrap();

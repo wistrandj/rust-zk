@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use super::config;
-use super::model::dbconfig;
+use super::db::dbconfig;
 
 #[derive(Debug)]
 struct A {

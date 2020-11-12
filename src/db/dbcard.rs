@@ -1,5 +1,5 @@
 use rusqlite::{Connection, params};
-use super::cardface::CardFace;
+use crate::model::cardface::CardFace;
 
 fn cards(conn: &mut Connection) -> Vec<CardFace> {
     let mut stmt = conn.prepare("select card_name from card;").unwrap();
