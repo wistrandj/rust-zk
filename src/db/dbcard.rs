@@ -29,31 +29,3 @@ pub fn save_card_and_hash(conn: &Connection, card: &Face, hash: &hash::Hash) {
     }
 }
 
-pub fn save_cards(conn: &mut Connection, cards: &Vec<Face>) {
-    let mut do_rollback = false;
-    let mut commit = conn.savepoint().unwrap();
-
-    {
-        let mut stmt = commit.prepare(
-            "insert into card(card_name) values (?1) on conflict do nothing"
-        ).unwrap();
-
-        for card in cards {
-            let name = card.name();
-            let success = stmt.execute(params![name]);
-
-            if let Err(msg) = success {
-                eprintln!("Fail to save card {}. Reason: {}", name, msg);
-                do_rollback = true;
-                break;
-            }
-        }
-    }
-
-    if do_rollback {
-        commit.rollback();
-    } else {
-        commit.commit();
-    }
-}
-
