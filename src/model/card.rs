@@ -1,9 +1,9 @@
-use super::cardface::CardFace;
+use super::cardface::Face;
 use std::ops::Deref;
 use std::cmp::Ordering;
 
-pub struct CardMeta {
-    pub face: CardFace,
+pub struct Meta {
+    pub face: Face,
     pub create_time: Timestamp,
     pub modify_time: Timestamp,
     pub content_sha256: String,
@@ -11,9 +11,9 @@ pub struct CardMeta {
     pub commit_email: String,
 }
 
-impl Deref for CardMeta {
-    type Target = CardFace;
-    fn deref(&self) -> &CardFace {
+impl Deref for Meta {
+    type Target = Face;
+    fn deref(&self) -> &Face {
         &self.face
     }
 }

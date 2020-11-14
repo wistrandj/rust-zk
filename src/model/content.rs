@@ -2,8 +2,8 @@
 // sqlite3 timeline or opencards.
 
 use rusqlite::{Connection, params};
-use super::card::{Timestamp, CardMeta};
-use super::cardface::CardFace;
+use super::card::{Timestamp, Meta};
+use super::cardface::Face;
 use std::collections::HashSet;
 use std::path::Path;
 use std::fs;
@@ -61,11 +61,11 @@ fn load_blob(conn: &Connection, file: &Path, sha256: hash::Hash) -> Option<Vec<u
     return Some(blob.unwrap());
 }
 
-fn all_timeline_cards(conn: &Connection) -> Vec<CardMeta> {
+fn all_timeline_cards(conn: &Connection) -> Vec<Meta> {
     return vec![];
 }
 
-fn all_open_cards(folder: &Path) -> Vec<CardMeta> {
+fn all_open_cards(folder: &Path) -> Vec<Meta> {
     return vec![];
 }
 
@@ -74,10 +74,10 @@ fn timestamp_of_file(file: &Path) -> Timestamp {
 }
 
 
-fn modified_open_cards(folder: &Path, conn: &Connection) -> Vec<CardMeta> {
+fn modified_open_cards(folder: &Path, conn: &Connection) -> Vec<Meta> {
     // Note(wistrandj): I am not very proud of this piece of code.
-    let opencards: Vec<CardMeta> = all_open_cards(folder);
-    let timelinecards: Vec<CardMeta> = all_timeline_cards(conn);
+    let opencards: Vec<Meta> = all_open_cards(folder);
+    let timelinecards: Vec<Meta> = all_timeline_cards(conn);
 
     // Error(wistrandj): Expect a named lifetime parameter.
     // type Name = &str;
@@ -102,8 +102,8 @@ fn modified_open_cards(folder: &Path, conn: &Connection) -> Vec<CardMeta> {
     let mut modified = Vec::new();
 
     for card in modified_or_new {
-        modified.push(CardMeta {
-            face: CardFace::from_name(&card.0).unwrap(),
+        modified.push(Meta {
+            face: Face::from_name(&card.0).unwrap(),
             create_time: Timestamp { },
             modify_time: Timestamp { },
             content_sha256: card.1.clone(),

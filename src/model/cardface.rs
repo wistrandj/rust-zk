@@ -1,14 +1,18 @@
 use std::path::{PathBuf, Path};
 use std::cmp::{Eq, Ord, PartialOrd, Ordering};
 
-enum Component {
-    Number(usize),
-    Char(String),
+mod card_inner {
+    pub enum Component {
+        Number(usize),
+        Char(String),
+    }
+
+    pub struct Face {
+        pub name_components: Vec<Component>,
+    }
 }
 
-pub struct CardFace {
-    name_components: Vec<Component>,
-}
+pub use self::card_inner::{Component, Face};
 
 
 fn name_components(name: &str) -> Option<Vec<Component>> {
@@ -79,11 +83,11 @@ fn name_components(name: &str) -> Option<Vec<Component>> {
     return Some(result);
 }
 
-impl CardFace {
-    pub fn from_name(name: &str) -> Option<CardFace> {
+impl Face {
+    pub fn from_name(name: &str) -> Option<Face> {
         let comps = name_components(name);
         if let Some(comps) = comps {
-            return Some(CardFace {
+            return Some(Face {
                 name_components: comps
             });
         } else {
@@ -91,8 +95,8 @@ impl CardFace {
         }
     }
 
-    pub fn from_number(major_number: usize) -> CardFace {
-        CardFace {
+    pub fn from_number(major_number: usize) -> Face {
+        Face {
             name_components: vec![Component::Number(major_number)],
         }
     }
@@ -156,16 +160,16 @@ impl PartialOrd for Component {
     }
 }
 
-impl PartialEq for CardFace {
-    fn eq(&self, that: &CardFace) -> bool {
+impl PartialEq for Face {
+    fn eq(&self, that: &Face) -> bool {
         self.cmp(that) == Ordering::Equal
     }
 }
 
-impl Eq for CardFace { }
+impl Eq for Face { }
 
-impl PartialOrd for CardFace {
-    fn partial_cmp(&self, that: &CardFace) -> Option<Ordering> {
+impl PartialOrd for Face {
+    fn partial_cmp(&self, that: &Face) -> Option<Ordering> {
         let both = self.name_components.iter().zip(&that.name_components);
 
         for (this, that) in both {
@@ -182,8 +186,8 @@ impl PartialOrd for CardFace {
     }
 }
 
-impl Ord for CardFace {
-    fn cmp(&self, that: &CardFace) -> Ordering {
+impl Ord for Face {
+    fn cmp(&self, that: &Face) -> Ordering {
         // Valid cards can be always compared. Component has only PartialOrd because
         // Numbers cannot be compared against Chars. A valid cards have Numbers and
         // Chars in alternating order so invalid comparison cannot happen.
@@ -199,7 +203,7 @@ mod test {
     fn test_create() {
         let cards = ["123", "123a", "123a1", "123a1b", "123a1b2"];
         for name in &cards {
-            let card = CardFace::from_name(&name).unwrap();
+            let card = Face::from_name(&name).unwrap();
             assert_eq!(card.major_number(), 123usize);
             assert_eq!(card.name(), *name);
         }
@@ -210,7 +214,7 @@ mod test {
         let numbers = [1usize, 123, 4_usize.pow(31)];
         for number in numbers.iter() {
             let name = number.to_string();
-            let card = CardFace::from_name(name.as_str()).unwrap();
+            let card = Face::from_name(name.as_str()).unwrap();
             assert_eq!(card.major_number(), *number);
         }
     }
@@ -219,14 +223,14 @@ mod test {
     fn test_negative() {
         let cards = ["", "a123", "a123a1", "123A", "123?"];
         for name in &cards {
-            let card = CardFace::from_name(&name);
+            let card = Face::from_name(&name);
             assert!(card.is_none());
         }
     }
 
     #[test]
     fn test_location_in() {
-        let card = CardFace::from_name("123a").unwrap();
+        let card = Face::from_name("123a").unwrap();
         let dir = PathBuf::from("./foo/bar");
         assert_eq!(card.location_in(&dir), PathBuf::from("./foo/bar/124a"));
     }
