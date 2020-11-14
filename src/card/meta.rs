@@ -1,4 +1,4 @@
-use super::cardface::Face;
+use super::Face;
 use std::ops::Deref;
 use std::cmp::Ordering;
 

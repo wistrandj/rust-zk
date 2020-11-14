@@ -1,9 +1,9 @@
 use std::path::{PathBuf, Path};
 use std::fs;
 use std::io;
-use super::cardface::Face;
+use crate::card::Face;
 use rusqlite::{Connection, params};
-use super::cardface;
+use crate::card;
 
 pub struct CardFolder {
     pub folder: PathBuf
@@ -37,12 +37,12 @@ impl CardFolder {
         }
     }
 
-    pub fn cards(&self) -> Vec<cardface::Face> {
+    pub fn cards(&self) -> Vec<card::Face> {
         let cardnames = list_file_names(&self.folder);
 
         if let Ok(cardnames) = cardnames {
             let cards: Vec<Face> = cardnames.iter()
-                .map(|it| cardface::Face::from_name(it))
+                .map(|it| card::Face::from_name(it))
                 .filter(|it| it.is_some())
                 .map(|it| it.unwrap())
                 .collect();
@@ -53,7 +53,7 @@ impl CardFolder {
     }
 }
 
-pub fn next_available(cards: &Vec<cardface::Face>) -> Face {
+pub fn next_available(cards: &Vec<card::Face>) -> Face {
     let latest_card = cards.iter().max();
     let latest_number: usize = if let Some(card) = latest_card { card.major_number() } else { 0 };
     return Face::from_number(latest_number + 1);

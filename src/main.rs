@@ -8,6 +8,7 @@ mod zkinit;
 mod zkset;
 mod zkcard;
 mod model;
+mod card;
 mod schema;
 mod hash;
 mod zkblob;

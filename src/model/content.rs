@@ -2,8 +2,8 @@
 // sqlite3 timeline or opencards.
 
 use rusqlite::{Connection, params};
-use super::card::{Timestamp, Meta};
-use super::cardface::Face;
+use crate::card::{Timestamp, Meta};
+use crate::card::Face;
 use std::collections::HashSet;
 use std::path::Path;
 use std::fs;

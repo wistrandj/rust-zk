@@ -1,19 +1,14 @@
 use std::path::{PathBuf, Path};
 use std::cmp::{Eq, Ord, PartialOrd, Ordering};
 
-mod card_inner {
-    pub enum Component {
-        Number(usize),
-        Char(String),
-    }
-
-    pub struct Face {
-        pub name_components: Vec<Component>,
-    }
+enum Component {
+    Number(usize),
+    Char(String),
 }
 
-pub use self::card_inner::{Component, Face};
-
+pub struct Face {
+    name_components: Vec<Component>,
+}
 
 fn name_components(name: &str) -> Option<Vec<Component>> {
     if name.len() == 0 {
