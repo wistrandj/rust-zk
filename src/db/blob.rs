@@ -4,12 +4,13 @@ use std::path::Path;
 use std::fs;
 use crate::hash;
 
-pub fn save(conn: &Connection, file: &Path) {
+pub fn save(conn: &Connection, file: &Path) -> hash::Hash {
     // Todo(wistrandj): Read content and calculate hash at the same time.
-    let hash = hash::Hash::file(file).unwrap().to_string();
+    let hash = hash::Hash::file(file).unwrap();
+    let hash_str = hash.to_string();
     let content_available = conn.query_row(
         "select count(*) from content where content_sha256 = ?1;",
-        params![hash],
+        params![hash_str],
         |row| {
             let count: u32 = row.get(0)?;
             Ok(count)
@@ -22,7 +23,7 @@ pub fn save(conn: &Connection, file: &Path) {
             let blob = fs::read(file).unwrap();
             let success = conn.execute(
                 "insert into content(content_sha256, blob) values (?1, ?2);",
-                params![hash, blob],
+                params![hash_str, blob],
             );
 
             if let Err(msg) = success {
@@ -32,14 +33,11 @@ pub fn save(conn: &Connection, file: &Path) {
     } else {
         panic!("Content table missing");
     }
+
+    return hash;
 }
 
-pub fn load(conn: &Connection, file: &Path, sha256: hash::Hash) -> Option<Vec<u8>> {
-    let file_exists = file.is_file() || file.is_dir();
-    if file_exists {
-        panic!("The file exists already");
-    }
-
+pub fn load(conn: &Connection, sha256: hash::Hash) -> Option<Vec<u8>> {
     let blob = conn.query_row(
         "select blob from content where content_sha256 = ?1",
         params![sha256.to_string()],

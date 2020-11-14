@@ -8,6 +8,8 @@ use super::file;
 use super::config;
 use super::model::opencard;
 use super::db::dbcard;
+use super::db::blob;
+use super::hash;
 
 pub fn zkcard(timeline_file: &PathBuf) {
     let mut timeline: Connection = config::open_timeline(&timeline_file).unwrap();
@@ -18,6 +20,7 @@ pub fn zkcard(timeline_file: &PathBuf) {
     eprintln!("Open a new card in {}", next.name());
     file::make_template(&next_location);
     file::edit(&next_location);
-    dbcard::save_cards(&mut timeline, &vec![next]);
+    let hash: hash::Hash = blob::save(&timeline, &next_location);
+    dbcard::save_card_and_hash(&mut timeline, &next, &hash);
 }
 
