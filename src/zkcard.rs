@@ -5,14 +5,12 @@ use std::path::PathBuf;
 use rusqlite::Connection;
 
 use super::file;
-use super::config;
 use super::model::opencard;
-use super::db::dbcard;
-use super::db::blob;
+use super::db;
 use super::hash;
 
 pub fn zkcard(timeline_file: &PathBuf) {
-    let mut timeline: Connection = config::open_timeline(&timeline_file).unwrap();
+    let mut timeline: Connection = db::open_timeline(&timeline_file).unwrap();
     let opencards = opencard::CardFolder::from_timeline(&timeline);
     let cards = opencards.cards();
     let next = opencard::next_available(&cards);
@@ -20,7 +18,7 @@ pub fn zkcard(timeline_file: &PathBuf) {
     eprintln!("Open a new card in {}", next.name());
     file::make_template(&next_location);
     file::edit(&next_location);
-    let hash: hash::Hash = blob::save(&timeline, &next_location);
-    dbcard::save_card_and_hash(&mut timeline, &next, &hash);
+    let hash: hash::Hash = db::blob::save(&timeline, &next_location);
+    db::dbcard::save_card_and_hash(&mut timeline, &next, &hash);
 }
 

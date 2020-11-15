@@ -1,6 +1,5 @@
 mod file;
 mod varg;
-mod config;
 use varg::Args;
 
 mod db;

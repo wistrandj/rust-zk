@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use super::varg;
-use super::config;
+use super::db;
 use super::model;
 use super::db::blob;
 
@@ -35,7 +35,7 @@ pub fn zkblob(timeline_file: &PathBuf, args: &varg::Args) {
         }
     }
 
-    let timeline = config::open_new_timeline(&timeline_file).unwrap();
+    let timeline = db::open_new_timeline(&timeline_file).unwrap();
 
     for file in files {
         blob::save(&timeline, &file);

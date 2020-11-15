@@ -1,14 +1,14 @@
 use std::path::PathBuf;
 use rusqlite::{params};
 
-use super::config;
+use super::db;
 use super::schema;
 
 // Command line tool to create a new timeline database. Usage:
 //   $ zk-init --timeline ./path/timeline.zk
 
 pub fn zkinit(timeline_file: &PathBuf) {
-    let timeline = config::open_new_timeline(timeline_file);
+    let timeline = db::open_new_timeline(timeline_file);
     if let Some(mut timeline) = timeline {
         schema::install_missing_features(&mut timeline);
 

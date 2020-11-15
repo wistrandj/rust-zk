@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 
-use super::config;
-use super::db::dbconfig;
+use super::db;
 
 #[derive(Debug)]
 struct A {
@@ -24,11 +23,11 @@ pub fn zkset(timeline_file: &PathBuf, args: &Vec<String>) {
             return;
         }
 
-        let timeline = config::open_timeline(&timeline_file).unwrap();
-        dbconfig::set_default_location(&timeline, &default_location);
+        let timeline = db::open_timeline(&timeline_file).unwrap();
+        db::dbconfig::set_default_location(&timeline, &default_location);
 
-        let default_location = dbconfig::default_location(&timeline).unwrap();
-        let version = dbconfig::version(&timeline).unwrap();
+        let default_location = db::dbconfig::default_location(&timeline).unwrap();
+        let version = db::dbconfig::version(&timeline).unwrap();
         println!("Version: {}", version);
         println!("Location for open cards: {}", default_location.to_string_lossy());
     }
