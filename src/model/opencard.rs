@@ -1,9 +1,9 @@
 use std::path::{PathBuf, Path};
 use std::fs;
 use std::io;
-use super::cardface::CardFace;
+use crate::card::Face;
 use rusqlite::{Connection, params};
-use super::cardface;
+use crate::card;
 
 pub struct CardFolder {
     pub folder: PathBuf
@@ -37,12 +37,12 @@ impl CardFolder {
         }
     }
 
-    pub fn cards(&self) -> Vec<cardface::CardFace> {
+    pub fn cards(&self) -> Vec<card::Face> {
         let cardnames = list_file_names(&self.folder);
 
         if let Ok(cardnames) = cardnames {
-            let cards: Vec<CardFace> = cardnames.iter()
-                .map(|it| cardface::CardFace::from_name(it))
+            let cards: Vec<Face> = cardnames.iter()
+                .map(|it| card::Face::from_name(it))
                 .filter(|it| it.is_some())
                 .map(|it| it.unwrap())
                 .collect();
@@ -53,17 +53,17 @@ impl CardFolder {
     }
 }
 
-pub fn next_available(cards: &Vec<cardface::CardFace>) -> CardFace {
+pub fn next_available(cards: &Vec<card::Face>) -> Face {
     let latest_card = cards.iter().max();
     let latest_number: usize = if let Some(card) = latest_card { card.major_number() } else { 0 };
-    return CardFace::from_number(latest_number + 1);
+    return Face::from_number(latest_number + 1);
 }
 
-pub fn next_major_card(folder: &PathBuf) -> CardFace {
+pub fn next_major_card(folder: &PathBuf) -> Face {
     let cards = list_cards(folder);
     let latest_card = cards.iter().max();
     let latest_number: usize = if let Some(card) = latest_card { card.major_number() } else { 0 };
-    return CardFace::from_number(latest_number + 1);
+    return Face::from_number(latest_number + 1);
 }
 
 fn list_file_names(path: &Path) -> io::Result<Vec<String>> {
@@ -84,10 +84,10 @@ fn list_file_names(path: &Path) -> io::Result<Vec<String>> {
     return Ok(files);
 }
 
-fn list_cards(path: &Path) -> Vec<CardFace> {
+fn list_cards(path: &Path) -> Vec<Face> {
     if let Ok(files) = list_file_names(path) {
         return files.iter()
-            .map(|file| CardFace::from_name(file))
+            .map(|file| Face::from_name(file))
             .filter(|card| !card.is_none())
             .map(|card| card.unwrap())
             .collect();
