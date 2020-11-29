@@ -1,8 +1,7 @@
 use std::path::PathBuf;
 use super::varg;
-use super::db;
 use super::model;
-use super::db::blob;
+use super::model::blob;
 
 // Todo(wistrandj):
 // - solve the issue with varg module
@@ -35,7 +34,7 @@ pub fn zkblob(timeline_file: &PathBuf, args: &varg::Args) {
         }
     }
 
-    let timeline = db::open_new_timeline(&timeline_file).unwrap();
+    let timeline = model::open_new_timeline(&timeline_file).unwrap();
 
     for file in files {
         blob::save(&timeline, &file);

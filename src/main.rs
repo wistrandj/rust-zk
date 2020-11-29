@@ -2,13 +2,13 @@ mod file;
 mod varg;
 use varg::Args;
 
-mod db;
+mod control;
+mod model;
 mod zkinit;
 mod zkset;
 mod zkcard;
-mod model;
 mod card;
-mod schema;
+mod feature;
 mod hash;
 mod zkblob;
 
