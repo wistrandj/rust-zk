@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use super::db;
+use super::model;
 
 #[derive(Debug)]
 struct A {
@@ -23,11 +23,11 @@ pub fn zkset(timeline_file: &PathBuf, args: &Vec<String>) {
             return;
         }
 
-        let timeline = db::open_timeline(&timeline_file).unwrap();
-        db::dbconfig::set_default_location(&timeline, &default_location);
+        let timeline = model::open_timeline(&timeline_file).unwrap();
+        model::carddb::set_default_location(&timeline, &default_location);
 
-        let default_location = db::dbconfig::default_location(&timeline).unwrap();
-        let version = db::dbconfig::version(&timeline).unwrap();
+        let default_location = model::carddb::default_location(&timeline).unwrap();
+        let version = model::carddb::version(&timeline).unwrap();
         println!("Version: {}", version);
         println!("Location for open cards: {}", default_location.to_string_lossy());
     }

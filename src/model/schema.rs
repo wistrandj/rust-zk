@@ -1,5 +1,5 @@
 use rusqlite::{Connection, params};
-mod feature;
+use crate::feature as feature;
 
 pub fn install_missing_features(conn: &mut Connection) {
     if !feature::has_feature_table("feature", &conn) {

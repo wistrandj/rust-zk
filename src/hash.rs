@@ -1,26 +1,47 @@
-
 use sha2;
 use sha2::Digest;
 use std::path;
 use std::fs;
 use std::io;
+use std::cmp::{Eq, PartialEq};
 
+const Sha256_size: usize = 32;
+
+#[derive(std::hash::Hash, Eq, PartialEq)]
 pub struct Hash {
-    bytes: [u8; 32]
+    bytes: [u8; Sha256_size]
 }
 
 impl Hash {
     pub fn from_sha2_hasher(hasher: sha2::Sha256) -> Hash {
         let digest = hasher.finalize();
-        return Self::from_slice(&digest.as_slice());
+        return Self::from_raw_hash(&digest.as_slice());
     }
 
     // fn from_sha2_digest(digest: sha2::Digest<OutputSize=u32>) -> Hash {
     //     panic!("Not implemented");
     // }
 
-    pub fn from_slice(slice: &[u8]) -> Hash {
-        let mut hash: [u8; 32] = [0; 32];
+    pub fn from_text(slice: &str) -> Hash {
+        if slice.len() != 2 * Sha256_size {
+            panic!("Textal representation of a hash hash invalid size of {} instead of {}", slice.len(), 2 * Sha256_size);
+        }
+
+        let mut raw_hash = [0u8; Sha256_size];
+        let mut slice_it = slice.bytes().into_iter();
+
+        for next in raw_hash.iter_mut() {
+            let hi: u8 = slice_it.next().unwrap();
+            let lo: u8 = slice_it.next().unwrap();
+            *next = hexcharvalue(hi, lo);
+        }
+
+        return Self::from_raw_hash(&raw_hash);
+    }
+
+    pub fn from_raw_hash(slice: &[u8]) -> Hash {
+        // Note(wistrandj): Change the type to slice of 32 bytes.
+        let mut hash: [u8; Sha256_size] = [0; Sha256_size];
 
         let mut i = 0;
         for b in slice {
@@ -28,7 +49,7 @@ impl Hash {
             i = i + 1;
         }
 
-        if i != 32 {
+        if i != Sha256_size {
             // Note(wistrandj): The sha2 library provides GenericArray
             // which includes the information about hash size. This function should
             // use that type information and consume a Digest instead
@@ -39,6 +60,10 @@ impl Hash {
         Hash {
             bytes: hash
         }
+    }
+
+    pub fn from_str(slice: &str) -> Hash {
+        panic!("NIY");
     }
 
     pub fn to_string(&self) -> String {
@@ -62,6 +87,12 @@ fn hexchar(c: u8) -> [char; 2] {
     return [hi, lo];
 }
 
+fn hexcharvalue(hi: u8, lo: u8) -> u8 {
+    // Note: Opposite of hexchar(..)
+    let set = b"0123456789abcdef";
+    panic!("NIY");
+}
+
 fn hexstring(slice: &[u8]) -> String {
     let mut s = String::new();
     for b in slice {
@@ -70,6 +101,14 @@ fn hexstring(slice: &[u8]) -> String {
         s.push(byte[1]);
     }
     return s;
+}
+
+fn hexslice(slice: &str) -> [u8; Sha256_size] {
+    // Note(wistradj): This len() is in bytes, right?
+    if slice.len() != 2 * Sha256_size {
+        panic!("The slice is not exactly 64 bytes");
+    }
+    return [0; Sha256_size]
 }
 
 // fn main() {
