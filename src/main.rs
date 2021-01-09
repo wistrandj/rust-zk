@@ -11,6 +11,7 @@ mod card;
 mod feature;
 mod hash;
 mod zkblob;
+mod zktag;
 
 fn main() {
     let args = Args::from_user_args();
@@ -29,6 +30,9 @@ fn main() {
                 },
                 "blob" => {
                     zkblob::zkblob(timeline_file, &args);
+                },
+                "tag" => {
+                    zktag::zktag(timeline_file, &args);
                 },
                 _ => {
                     eprintln!("Invalid or missing subcommand");

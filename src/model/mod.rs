@@ -2,6 +2,7 @@ pub mod blob;
 pub mod carddb;
 pub mod cardfolder;
 pub mod schema;
+pub mod tag;
 
 use std::path::Path;
 use rusqlite::Connection;
