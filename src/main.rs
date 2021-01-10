@@ -20,7 +20,7 @@ fn main() {
         if let Some(timeline_file) = &args.timeline_file {
             match subcommand.as_str() {
                 "init" => {
-                    zkinit::zkinit(timeline_file);
+                    zkinit::zkinit(timeline_file, &args);
                 },
                 "set" => {
                     zkset::zkset(timeline_file, &args.args);
