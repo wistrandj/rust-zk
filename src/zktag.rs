@@ -1,7 +1,7 @@
 use crate::varg::Args;
 use rusqlite::Connection;
 use std::path::PathBuf;
-use crate::model::tag as tag_lib;
+use crate::control::tag as tag_lib;
 use crate::card;
 use crate::model;
 
