@@ -126,10 +126,8 @@ impl<'a> DeleteTag<'a> {
 
 impl<'a> DeleteTagAll<'a> {
     pub fn new(connection: &'a Connection, tag_name: &str) -> Result<DeleteTagAll<'a>, &'static str> {
-        println!("02 here");
         let feat = TagFeature::new(&connection);
         let tag_exists = feat.tag_exists(tag_name)?;
-        println!("Tag exists or not: {}", tag_exists);
         if tag_exists {
             return Ok(DeleteTagAll {
                 connection,
@@ -141,8 +139,6 @@ impl<'a> DeleteTagAll<'a> {
     }
 
     pub fn call_once(&self) -> Result<(), &'static str> {
-        println!("03 here");
-        println!("DeleteTagAll: call_once");
         let feat = TagFeature::new(self.connection);
         feat.unset_tag_from_all_cards(&self.tag_name)
     }
