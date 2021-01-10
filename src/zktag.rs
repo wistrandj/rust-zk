@@ -1,7 +1,7 @@
 use crate::varg::Args;
 use rusqlite::Connection;
 use std::path::PathBuf;
-use crate::model::tag as tag_lib;
+use crate::control::tag as tag_lib;
 use crate::card;
 use crate::model;
 
@@ -65,11 +65,8 @@ fn delete_tag_of_given_cards(connection: &Connection, tag: &str, cards: &[String
 }
 
 fn delete_whole_tag(connection: &Connection, tag: &str) -> Result<(), &'static str> {
-    println!("01 here");
     let cmd = tag_lib::DeleteTagAll::new(connection, tag)?;
-    println!("02a here");
     let r = cmd.call_once();
-    println!("03a here");
     return r;
 }
 
@@ -135,11 +132,7 @@ pub fn zktag(timeline: &PathBuf, args: &Args) -> Result<(), &'static str> {
         let connection = model::open_timeline(timeline_file).unwrap();
         if let Some(tag_name) = parameters.get(1) {
             let cards_or_empty_list = &parameters.as_slice()[2..];
-            for c in cards_or_empty_list {
-                println!("........ {}", c);
-            }
             if cards_or_empty_list.len() == 0 {
-                println!("... Deleting the tag all cards");
                 let success = delete_whole_tag(&connection, tag_name);
                 match success {
                     Ok(_) => { return Ok(()) },
@@ -149,7 +142,6 @@ pub fn zktag(timeline: &PathBuf, args: &Args) -> Result<(), &'static str> {
                     }
                 }
             } else {
-                println!("... Deleting tag from few cards");
                 return delete_tag_of_given_cards(&connection, tag_name, cards_or_empty_list);
             }
         } else {
